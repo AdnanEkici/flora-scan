@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/splashBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        android:src="@drawable/splash_screen_background" />
+
+    <LinearLayout
+        android:id="@+id/splashContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp">
+
+        <ImageView
+            android:id="@+id/floraScanLogo"
+            android:layout_width="330dp"
+            android:layout_height="330dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="FloraScan Logo"
+            android:scaleType="fitCenter"
+            android:src="@drawable/splash_screen_logo" />
+
+        <ProgressBar
+            android:id="@+id/splashProgress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="64dp"
+            android:indeterminate="true"
+            android:indeterminateTint="#4CAF61" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/bottomTagline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="32dp"
+        android:letterSpacing="0.12"
+        android:text="NATURE CLOSER TO YOU"
+        android:textColor="#73917B"
+        android:textSize="11sp" />
+
+</RelativeLayout>
