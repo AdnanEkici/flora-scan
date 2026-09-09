@@ -3,6 +3,8 @@ import java.util.Properties
 
 import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.plugins.quality.Pmd
+import org.gradle.api.tasks.javadoc.Javadoc
+import org.gradle.external.javadoc.StandardJavadocDocletOptions
 
 plugins {
     alias(libs.plugins.android.application)
@@ -34,12 +36,15 @@ android {
 
     defaultConfig {
         applicationId = "com.example.florascan"
+
         minSdk = 24
         targetSdk = 36
+
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner =
+            "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField(
             "String",
@@ -101,7 +106,10 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.ui.test.junit4)
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.6.1")
+
+    androidTestImplementation(
+        "androidx.test.espresso:espresso-intents:3.6.1"
+    )
 
     debugImplementation(libs.ui.test.manifest)
     debugImplementation(libs.ui.tooling)
@@ -109,20 +117,35 @@ dependencies {
 
 checkstyle {
     toolVersion = "10.21.4"
-    configFile = rootProject.file("config/checkstyle/checkstyle.xml")
+
+    configFile =
+        rootProject.file(
+            "config/checkstyle/checkstyle.xml"
+        )
 }
 
 pmd {
     toolVersion = "7.9.0"
+
     ruleSetFiles = files(
-        rootProject.file("config/pmd/pmd.xml")
+        rootProject.file(
+            "config/pmd/pmd.xml"
+        )
     )
+
     ruleSets = emptyList()
 }
 
 tasks.withType<org.gradle.api.tasks.testing.Test>().configureEach {
-    systemProperty("user.language", "en")
-    systemProperty("user.country", "US")
+    systemProperty(
+        "user.language",
+        "en"
+    )
+
+    systemProperty(
+        "user.country",
+        "US"
+    )
 }
 
 tasks.register<Checkstyle>("checkstyleMain") {
@@ -149,8 +172,71 @@ tasks.register<Pmd>("pmdMain") {
     classpath = files()
 
     ruleSetFiles = files(
-        rootProject.file("config/pmd/pmd.xml")
+        rootProject.file(
+            "config/pmd/pmd.xml"
+        )
     )
 
     ruleSets = emptyList()
+}
+
+val androidBootClasspath =
+    androidComponents.sdkComponents.bootClasspath
+
+androidComponents {
+    onVariants(
+        selector().withName("debug")
+    ) { variant ->
+
+        val javaSources =
+            variant.sources.java
+
+        tasks.register<Javadoc>("generateJavadoc") {
+            group = "documentation"
+
+            description =
+                "Generates FloraScan Javadoc documentation."
+
+            if (javaSources != null)
+            {
+                source(javaSources.all)
+            }
+            else
+            {
+                source("src/main/java")
+            }
+
+            include("**/*.java")
+
+            classpath = files(
+                androidBootClasspath,
+                variant.compileClasspath
+            )
+
+            destinationDir =
+                layout.buildDirectory
+                    .dir("docs/javadoc")
+                    .get()
+                    .asFile
+
+            isFailOnError = true
+
+            (options as StandardJavadocDocletOptions).apply {
+                encoding = "UTF-8"
+                charSet = "UTF-8"
+                docEncoding = "UTF-8"
+
+                windowTitle =
+                    "FloraScan API Documentation"
+
+                docTitle =
+                    "FloraScan API Documentation"
+
+                addBooleanOption(
+                    "private",
+                    true
+                )
+            }
+        }
+    }
 }

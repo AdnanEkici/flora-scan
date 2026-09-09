@@ -20,6 +20,24 @@ import com.example.florascan.service.PlantNetIdentifier;
 import com.example.florascan.service.PlantNetResultMapper;
 import com.example.florascan.utils.ImagePreprocessor;
 
+/**
+ * Coordinates the plant identification process while displaying the loading
+ * screen.
+ *
+ * <p>The activity receives the URI of the image selected for identification,
+ * initializes the identification dependencies, and delegates the request to
+ * {@link PlantRepository}. The selected image is preprocessed and submitted
+ * to the configured plant identification provider through
+ * {@link PlantNetIdentifier}.</p>
+ *
+ * <p>Successful identifications are forwarded to {@link ResultActivity},
+ * while failures are presented to the user before the activity is closed.
+ * A minimum loading duration is applied so that very fast responses do not
+ * cause an abrupt transition between the preview and result screens.</p>
+ *
+ * <p>The activity also owns the lifecycle of the identifier's background
+ * executor and releases pending callbacks and resources when destroyed.</p>
+ */
 public class LoadingActivity extends AppCompatActivity
 {
     private static final String EXTRA_IMAGE_URI = "selected_image_uri";
@@ -33,6 +51,14 @@ public class LoadingActivity extends AppCompatActivity
     private Uri selectedImageUri;
     private long loadingStartedAtMilliseconds;
 
+    /**
+     * Creates an intent configured to start the loading screen with the image
+     * selected for plant identification.
+     *
+     * @param context the context used to create the intent
+     * @param selectedImageUri the URI of the image to identify
+     * @return an intent configured to launch {@link LoadingActivity}
+     */
     public static Intent createIntent(Context context, Uri selectedImageUri)
     {
         Intent loadingIntent = new Intent(context, LoadingActivity.class);
@@ -41,6 +67,18 @@ public class LoadingActivity extends AppCompatActivity
         return loadingIntent;
     }
 
+    /**
+     * Initializes the loading screen, retrieves the selected image URI,
+     * constructs the identification dependencies, and starts plant
+     * identification.
+     *
+     * <p>If the required image URI is missing, the activity is closed because an
+     * identification request cannot be performed.</p>
+     *
+     * @param savedInstanceState the previously saved activity state, or
+     *                           {@code null} when the activity is created
+     *                           for the first time
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -61,6 +99,10 @@ public class LoadingActivity extends AppCompatActivity
         identifyPlant();
     }
 
+    /**
+     * Releases pending main-thread callbacks and shuts down the plant
+     * identification executor when the activity is destroyed.
+     */
     @Override
     protected void onDestroy()
     {
@@ -74,6 +116,13 @@ public class LoadingActivity extends AppCompatActivity
         super.onDestroy();
     }
 
+    /**
+     * Constructs the dependencies required for plant identification.
+     *
+     * <p>This initializes the Pl@ntNet API client, image preprocessor, response
+     * mapper, provider-specific identifier, and repository used by the loading
+     * flow.</p>
+     */
     private void initializeDependencies()
     {
         PlantNetApi plantNetApi =
@@ -97,6 +146,13 @@ public class LoadingActivity extends AppCompatActivity
         );
     }
 
+    /**
+     * Starts asynchronous identification of the selected image.
+     *
+     * <p>A successful identification is forwarded to the result screen after the
+     * minimum loading duration has elapsed. Failed identification requests are
+     * handled through the same timing mechanism before an error is shown.</p>
+     */
     private void identifyPlant()
     {
         plantRepository.identifyPlant(
@@ -122,6 +178,13 @@ public class LoadingActivity extends AppCompatActivity
                        );
     }
 
+    /**
+     * Executes the supplied completion action after ensuring that the loading
+     * screen has been visible for at least the configured minimum duration.
+     *
+     * @param completionAction the action to execute after the loading duration
+     *                         requirement has been satisfied
+     */
     private void completeAfterMinimumLoadingDuration(Runnable completionAction)
     {
         long elapsedMilliseconds =
@@ -132,7 +195,7 @@ public class LoadingActivity extends AppCompatActivity
 
         if (remainingMilliseconds <= 0)
         {
-            completionAction.run();
+            mainThreadHandler.post(completionAction);
             return;
         }
 
@@ -142,6 +205,12 @@ public class LoadingActivity extends AppCompatActivity
                          );
     }
 
+    /**
+     * Opens {@link ResultActivity} with the selected image and identified plant
+     * data, then closes the loading screen.
+     *
+     * @param plantResult the successfully identified plant result
+     */
     private void openResultScreen(PlantResult plantResult)
     {
         Intent resultIntent =
@@ -155,6 +224,12 @@ public class LoadingActivity extends AppCompatActivity
         finish();
     }
 
+    /**
+     * Displays an identification failure message to the user and closes the
+     * loading screen.
+     *
+     * @param errorMessage the message describing the identification failure
+     */
     private void showIdentificationError(String errorMessage)
     {
         Toast.makeText(
@@ -165,7 +240,13 @@ public class LoadingActivity extends AppCompatActivity
 
         finish();
     }
-
+    /**
+     * Reads and parses the selected image URI supplied through the launching
+     * intent.
+     *
+     * @return the selected image URI, or {@code null} when the required intent
+     *         extra is missing or empty
+     */
     private Uri getSelectedImageUri()
     {
         String selectedImageUriValue =

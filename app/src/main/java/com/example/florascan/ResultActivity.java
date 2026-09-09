@@ -15,6 +15,19 @@ import com.google.android.material.card.MaterialCardView;
 
 import java.util.Locale;
 
+/**
+ * Displays the result of a plant identification request.
+ *
+ * <p>The activity receives the selected plant image and identification data
+ * through intent extras, reconstructs a {@link PlantResult}, and presents the
+ * plant's common name, scientific name, taxonomy, and identification
+ * confidence. It also allows the user to share the identification result or
+ * return to the main screen to identify another plant.</p>
+ *
+ * <p>Instances of this activity should be launched through
+ * {@link #createIntent(Context, Uri, PlantResult)} so that all required result
+ * data is supplied consistently.</p>
+ */
 public class ResultActivity extends AppCompatActivity
 {
     private static final String EXTRA_IMAGE_URI = "selected_image_uri";
@@ -40,6 +53,15 @@ public class ResultActivity extends AppCompatActivity
     private Uri selectedImageUri;
     private PlantResult plantResult;
 
+    /**
+     * Creates an intent containing the data required to display a plant
+     * identification result.
+     *
+     * @param context the context used to create the intent
+     * @param selectedImageUri the URI of the image used for identification
+     * @param plantResult the identified plant data to display
+     * @return an intent configured to launch {@link ResultActivity}
+     */
     public static Intent createIntent(
         Context context,
         Uri selectedImageUri,
@@ -80,6 +102,17 @@ public class ResultActivity extends AppCompatActivity
         return resultIntent;
     }
 
+    /**
+     * Initializes the result screen, loads identification data from the launching
+     * intent, configures user interactions, and displays the plant result.
+     *
+     * <p>If the required image URI is unavailable, the activity is closed because
+     * the result screen cannot be displayed correctly.</p>
+     *
+     * @param savedInstanceState the previously saved activity state, or
+     *                           {@code null} when the activity is created
+     *                           for the first time
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -99,6 +132,9 @@ public class ResultActivity extends AppCompatActivity
         displayResult();
     }
 
+    /**
+     * Resolves and stores references to the views used by the result screen.
+     */
     private void initializeViews()
     {
         backButton = findViewById(R.id.backButton);
@@ -116,6 +152,9 @@ public class ResultActivity extends AppCompatActivity
             findViewById(R.id.identifyAnotherButton);
     }
 
+    /**
+     * Configures the navigation, sharing, and identify-another user interactions.
+     */
     private void initializeListeners()
     {
         backButton.setOnClickListener(view -> finish());
@@ -129,6 +168,14 @@ public class ResultActivity extends AppCompatActivity
                              );
     }
 
+    /**
+     * Reads the selected image URI and plant identification data from the
+     * launching intent and reconstructs the {@link PlantResult} used by the
+     * screen.
+     *
+     * @return {@code true} when the required result data can be loaded;
+     *         {@code false} when the image URI is missing
+     */
     private boolean loadResultData()
     {
         String imageUriValue =
@@ -170,6 +217,10 @@ public class ResultActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Displays the selected plant image, identification details, taxonomy, and
+     * formatted confidence values on the result screen.
+     */
     private void displayResult()
     {
         Glide.with(this)
@@ -196,6 +247,14 @@ public class ResultActivity extends AppCompatActivity
         confidenceBadgeValue.setText(confidenceBadgePercentage);
     }
 
+    /**
+     * Converts a normalized confidence score into a percentage with one decimal
+     * place.
+     *
+     * @param confidence the normalized confidence score, where {@code 1.0}
+     *                   represents 100 percent confidence
+     * @return the formatted confidence percentage, such as {@code "92.0%"}
+     */
     private String formatConfidencePercentage(double confidence)
     {
         double confidencePercentage = confidence * 100.0;
@@ -210,6 +269,14 @@ public class ResultActivity extends AppCompatActivity
         return formattedConfidence;
     }
 
+    /**
+     * Converts a normalized confidence score into a whole-number percentage for
+     * display in the confidence badge.
+     *
+     * @param confidence the normalized confidence score, where {@code 1.0}
+     *                   represents 100 percent confidence
+     * @return the formatted confidence percentage, such as {@code "92%"}
+     */
     private String formatConfidenceBadgePercentage(double confidence)
     {
         double confidencePercentage = confidence * 100.0;
@@ -224,6 +291,10 @@ public class ResultActivity extends AppCompatActivity
         return formattedConfidence;
     }
 
+    /**
+     * Opens the Android share chooser with a text summary containing the plant's
+     * common name, scientific name, and identification confidence.
+     */
     private void sharePlantResult()
     {
         String shareMessage =
@@ -251,6 +322,10 @@ public class ResultActivity extends AppCompatActivity
         startActivity(chooserIntent);
     }
 
+    /**
+     * Returns to {@link MainActivity} and clears intermediate activities from the
+     * navigation stack so the user can begin another plant identification.
+     */
     private void returnToMainScreen()
     {
         Intent mainIntent =
