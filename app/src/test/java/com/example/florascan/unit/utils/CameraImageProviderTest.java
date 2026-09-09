@@ -1,4 +1,4 @@
-package com.example.florascan.unit;
+package com.example.florascan.unit.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
