@@ -1,0 +1,37 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ["--maxkb=5000"]
+      - id: check-yaml
+      - id: check-json
+      - id: check-xml
+      - id: detect-private-key
+
+  - repo: https://github.com/igrr/astyle_py.git
+    rev: v1.1.0
+    hooks:
+      - id: astyle_py
+        name: Format Java
+        files: '\.java$'
+        args:
+          - --astyle-version=3.4.7
+          - --style=allman
+          - --indent=spaces=4
+          - --convert-tabs
+          - --pad-oper
+          - --pad-header
+          - --unpad-paren
+
+  - repo: local
+    hooks:
+      - id: android-lint
+        name: Android Lint
+        entry: gradlew.bat lintDebug
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
