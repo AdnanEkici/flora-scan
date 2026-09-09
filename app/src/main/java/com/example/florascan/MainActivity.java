@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity
 
     private MaterialCardView takePhotoButton;
     private MaterialCardView galleryButton;
-
     private CameraImageProvider cameraImageProvider;
     private Uri cameraImageUri;
 

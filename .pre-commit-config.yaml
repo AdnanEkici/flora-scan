@@ -29,6 +29,18 @@ repos:
 
   - repo: local
     hooks:
+      - id: java-checkstyle
+        name: Java Checkstyle
+        entry: gradlew.bat checkstyleMain
+        language: system
+        pass_filenames: false
+
+      - id: java-pmd
+        name: Java PMD
+        entry: gradlew.bat pmdMain
+        language: system
+        pass_filenames: false
+
       - id: android-lint
         name: Android Lint
         entry: gradlew.bat lintDebug
