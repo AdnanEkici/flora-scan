@@ -1,7 +1,7 @@
 # FloraScan
-[![Tests](https://github.com/AdnanEkici/flora-scan/actions/workflows/tests.yml/badge.svg)](https://github.com/AdnanEkici/flora-scan/actions/workflows/tests.yml)
 [![Documentation](https://github.com/AdnanEkici/flora-scan/actions/workflows/docs.yml/badge.svg?branch=main&event=push)](https://github.com/AdnanEkici/flora-scan/actions/workflows/docs.yml)
 
+![FloraScan Demo](assets/application-add.gif)
 
 FloraScan is a native Android application that identifies plants from photographs.
 
@@ -9,7 +9,7 @@ Users can capture a plant using the device camera or select an existing image fr
 
 The application is implemented in **Java with XML layouts** and uses the **Pl@ntNet API** as its plant-identification provider.
 
-**[APP Documentation](https://adnanekici.github.io/flora-scan/)**
+**[Application Documentation](https://adnanekici.github.io/flora-scan/)**
 ## Features
 
 - Capture a plant image using the device camera
@@ -35,6 +35,15 @@ The application is implemented in **Java with XML layouts** and uses the **Pl@nt
 - Android-specific analysis with Android Lint
 - Generated Javadoc documentation
 
+## API Key Setup
+
+FloraScan uses the Pl@ntNet API for plant identification.
+
+Before running the application, add your Pl@ntNet API key to the project's `local.properties` file:
+
+```properties
+PLANTNET_API_KEY=your_api_key_here
+```
 
 ## Application Flow
 

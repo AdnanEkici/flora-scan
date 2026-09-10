@@ -108,6 +108,7 @@
                                 app:tint="#FFFFFF" />
 
                             <TextView
+                                android:id="@+id/confidenceLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
@@ -265,39 +266,6 @@
                             android:text="92%"
                             android:textColor="#33483B"
                             android:textSize="15sp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp"
-                        android:gravity="top"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:src="@drawable/ic_description"
-                            app:tint="#1B5E20" />
-
-                        <TextView
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="14dp"
-                            android:text="Description"
-                            android:textColor="#3C5144"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:id="@+id/descriptionValue"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:lineSpacingExtra="3dp"
-                            android:text="A popular indoor plant known for its heart-shaped leaves and easy care. It helps purify indoor air and can thrive in low light conditions."
-                            android:textColor="#33483B"
-                            android:textSize="14sp" />
 
                     </LinearLayout>
 
