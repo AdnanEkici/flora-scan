@@ -30,13 +30,26 @@ import java.util.Locale;
  */
 public class ResultActivity extends AppCompatActivity
 {
+
+    private static final double HIGH_CONFIDENCE_THRESHOLD = 0.80;
+    private static final double MODERATE_CONFIDENCE_THRESHOLD = 0.50;
+
+    private static final String HIGH_CONFIDENCE_COLOR = "#2E7D32";
+    private static final String HIGH_CONFIDENCE_VALUE_COLOR = "#1B5E20";
+
+    private static final String MODERATE_CONFIDENCE_COLOR = "#F59E0B";
+    private static final String MODERATE_CONFIDENCE_VALUE_COLOR = "#D97706";
+
+    private static final String LOW_CONFIDENCE_COLOR = "#D32F2F";
+    private static final String LOW_CONFIDENCE_VALUE_COLOR = "#B71C1C";
+
     private static final String EXTRA_IMAGE_URI = "selected_image_uri";
     private static final String EXTRA_COMMON_NAME = "common_name";
     private static final String EXTRA_SCIENTIFIC_NAME = "scientific_name";
     private static final String EXTRA_FAMILY = "family";
     private static final String EXTRA_GENUS = "genus";
     private static final String EXTRA_CONFIDENCE = "confidence";
-
+    private static final String EXTRA_DESCRIPTION = "description";
     private ImageView backButton;
     private ImageView shareButton;
     private ImageView plantImage;
@@ -47,7 +60,9 @@ public class ResultActivity extends AppCompatActivity
     private TextView familyValue;
     private TextView genusValue;
     private TextView confidenceValue;
+    private TextView confidenceLabel;
 
+    private MaterialCardView confidenceBadge;
     private MaterialCardView identifyAnotherButton;
 
     private Uri selectedImageUri;
@@ -147,7 +162,8 @@ public class ResultActivity extends AppCompatActivity
         familyValue = findViewById(R.id.familyValue);
         genusValue = findViewById(R.id.genusValue);
         confidenceValue = findViewById(R.id.confidenceValue);
-
+        confidenceBadge = findViewById(R.id.confidenceBadge);
+        confidenceLabel = findViewById(R.id.confidenceLabel);
         identifyAnotherButton =
             findViewById(R.id.identifyAnotherButton);
     }
@@ -244,6 +260,8 @@ public class ResultActivity extends AppCompatActivity
             );
 
         confidenceValue.setText(confidencePercentage);
+
+        updateConfidenceState(plantResult.getConfidence());
         confidenceBadgeValue.setText(confidenceBadgePercentage);
     }
 
@@ -339,4 +357,55 @@ public class ResultActivity extends AppCompatActivity
         startActivity(mainIntent);
         finish();
     }
+
+    /**
+     * Updates the confidence label and badge colors based on the given
+     * identification confidence score.
+     *
+     * <p>The confidence value is expected to be normalized between {@code 0.0}
+     * and {@code 1.0}. Both the confidence container and percentage badge are
+     * styled according to the configured confidence thresholds.</p>
+     *
+     * @param confidence the normalized identification confidence score
+     */
+    private void updateConfidenceState(double confidence)
+    {
+        if (confidence >= HIGH_CONFIDENCE_THRESHOLD)
+        {
+            confidenceLabel.setText("High Confidence");
+
+            confidenceBadge.setCardBackgroundColor(
+                               android.graphics.Color.parseColor(HIGH_CONFIDENCE_COLOR)
+                           );
+
+            confidenceBadgeValue.setBackgroundColor(
+                                    android.graphics.Color.parseColor(HIGH_CONFIDENCE_VALUE_COLOR)
+                                );
+        }
+        else if (confidence >= MODERATE_CONFIDENCE_THRESHOLD)
+        {
+            confidenceLabel.setText("Moderate Confidence");
+
+            confidenceBadge.setCardBackgroundColor(
+                               android.graphics.Color.parseColor(MODERATE_CONFIDENCE_COLOR)
+                           );
+
+            confidenceBadgeValue.setBackgroundColor(
+                                    android.graphics.Color.parseColor(MODERATE_CONFIDENCE_VALUE_COLOR)
+                                );
+        }
+        else
+        {
+            confidenceLabel.setText("Low Confidence");
+
+            confidenceBadge.setCardBackgroundColor(
+                               android.graphics.Color.parseColor(LOW_CONFIDENCE_COLOR)
+                           );
+
+            confidenceBadgeValue.setBackgroundColor(
+                                    android.graphics.Color.parseColor(LOW_CONFIDENCE_VALUE_COLOR)
+                                );
+        }
+    }
+
 }

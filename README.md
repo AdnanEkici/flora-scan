@@ -1,5 +1,4 @@
 # FloraScan
-[![Tests](https://github.com/AdnanEkici/flora-scan/actions/workflows/tests.yml/badge.svg)](https://github.com/AdnanEkici/flora-scan/actions/workflows/tests.yml)
 [![Documentation](https://github.com/AdnanEkici/flora-scan/actions/workflows/docs.yml/badge.svg?branch=main&event=push)](https://github.com/AdnanEkici/flora-scan/actions/workflows/docs.yml)
 
 
@@ -35,6 +34,15 @@ The application is implemented in **Java with XML layouts** and uses the **Pl@nt
 - Android-specific analysis with Android Lint
 - Generated Javadoc documentation
 
+## API Key Setup
+
+FloraScan uses the Pl@ntNet API for plant identification.
+
+Before running the application, add your Pl@ntNet API key to the project's `local.properties` file:
+
+```properties
+PLANTNET_API_KEY=your_api_key_here
+```
 
 ## Application Flow
 
